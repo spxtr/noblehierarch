@@ -13,6 +13,7 @@
     style=chem-rsc,
     maxbibnames=1,
 ]{biblatex}
+\usepackage{braket}
 \addbibresource{refs.bib}
 \AtBeginBibliography{\footnotesize}
 \usepackage{hyperref}
@@ -185,6 +186,7 @@ If the magnetoresistance in our device were the result of a compensated semimeta
 We start with the Hamiltonian from Eq. 2 of the main text:
 \begin{equation}
 H = \sum_{\alpha\in\{A,B\}}\sum_{\langle i,j \rangle}a_{ij}c_{i\alpha}^\dagger c_{j\alpha} + V\sum_i\left(c_{iA}^\dagger c_{iA} - c_{iB}^\dagger c_{iB}\right)+ \mathrm{h.c.}
+\label{eq:two_species_toy_model}
 \end{equation}
 where $i$ and $j$ are lattice sites and $A$ and $B$ are the two fermion species. In the Landau gauge, the vector potential $\mathbf{A}=(0,Bm,0)$, and the hopping terms in $y$ pick up a Peierl’s phase of $eBm/\hbar=2\pi \phi m$ for $\phi=eB/2\pi\hbar$. Considering only rational values $\phi=p/q$ for coprime $p$ and $q$, the Peierl’s phase repeats after $q$ hops in the $x$ direction, and so we define the magnetic Brillouin zone (MBZ, not to be confused with mini or moiré BZ) as $0<k_x<2\pi/q$ and $0<k_y<2\pi$.
 
@@ -194,7 +196,26 @@ H = \sum_{\alpha\in\{A,B\}}\sum_{m=1}^q\left[ a_y\cos (2\pi \phi m-k_y) c_{m\alp
 \end{multline*}
 As this is a finite 1D Hamiltonian, it is now straightforward to numerically compute its eigenvalues. The most convenient way to compute the spectrum over a large range of magnetic field values is to set $q$ to some large prime number (typically ~thousands, depending on the available computation power) and then solve the above equation for $p$ from 1 to $q - 1$. In principle, we should vary $k_x$ and $k_y$ throughout the MBZ to extract the full energy spectrum. For such large values of $q$, the width of each subband becomes extremely small such that the spectra are effectively constant throughout the MBZ, so we only solve for $k_x=k_y=0$.
 
-We show the behavior of the split LLs for a range of hopping parameters in Fig. S9. We have also made calculations on a hexagonal lattice with anisotropy and unit cell doubling, and have verified that the behavior is qualitatively similar to that on the square lattice with anisotropy and unit cell doubling. Without fine tuning we can replicate the disappearance of odd LLs, the split even LLs, and the split intersection behavior. We note, however, that this is still not the correct model for the twisted bilayer graphene moiré, which is not representible by a tight-binding model due to Wannier obstruction \cite{zouBandStructureTwisted2018}.
+We show the behavior of the split LLs for a range of hopping parameters in Fig. S9. We have also made calculations on a hexagonal lattice with anisotropy and unit cell doubling, and have verified that the behavior is qualitatively similar to that on the square lattice with anisotropy and unit cell doubling. Without fine tuning we can replicate the disappearance of odd LLs, the split even LLs, and the split intersection behavior. We note, however, that this is still not the correct model for the twisted bilayer graphene moiré, which is not representable by a tight-binding model due to Wannier obstruction \cite{zouBandStructureTwisted2018}.
+
+
+\section{Magnetoresistence Calculation}
+
+%magnetoresistence calculation details
+%essentially the same as the Wannier plot
+%does not contain the quadratic increase with B
+%the increase may be due to interactions
+
+Many spectral features in the Hofstadter problem are determined solely by the band topology at zero field, so they are only weakly model-dependent. Indeed, this is why a model such as Eq. \eqref{eq:two_species_toy_model} can capture so many of the experimental features. Here we compute the magnetoresistence $\rho_{xx}$ for the model Eq. \eqref{eq:two_species_toy_model}. The magnetoresistence is partially governed by the same topology as the spectrum, and many of the key experimental features are reproduced. However, $\rho_{xx}$ is far more dependent on the microscopic details of the model.
+
+The main contribution to the magnetoresistence is through the Drude weight. For a bandstructure $H_{k} \ket{u_{ka}} = \epsilon_a(k) \ket{u_{ka}}$, the zero-frequency conductivity is
+\begin{equation}
+	\sigma_{xx}(\omega = 0) \propto \sum_{a \in \mathrm{bands}} \int_{BZ} dk \, \frac{\partial f}{\partial \epsilon_a} \left|{v_{aa}^x\right|^2,
+\end{equation}
+where $f(\epsilon) = [1 + e^{\beta(\epsilon-\mu)}]^{-1}$ is the Fermi factor, and the integral runs over the (magnetic) Brillouin zone. The velocity matrix element is $v_{aa}^x = \braket{u_{ka}| \frac{\partial h}{\partial k^x}| u_{ka}}$, where $\frac{\partial h}{\partial k^x} = \sum_{\alpha \in \{A,B\}} \sum_{m=1}^q (i k_x a_x) e^{-ik_x} c_{m+1,\alpha} c_{m,\alpha} + \mathrm{h.c.}$ depends on the details of the model. Conversely, $\frac{\partial f}{\partial \epsilon_a}$ limits to a $\delta$ function at the Fermi surface as $\beta \to 0$; without the velocity matrix elements, this reduces to the density of states.
+
+Fig [To-do] shows $\rho_{xx}(B)$. One can see that the features of the Landau fan are essentially the same as the spectral plots. The magnetoresistence, however, is also peaked around $n/n_s = 1/4,1/2,3/4$, due to the velocity matrix elements. This is reminiscence of the large magnetoresistence regions in Fig. 2 --- but here their amplitude is not field-dependent. We conjecture that the large magnetoresistence regions may be due to the interplay of magnetic field with the electronic interactions.  
+
 
 \section{Split Landau level intersection behavior in the model}
 The complicated split LL intersection behavior from our model is not difficult to understand, however it is somewhat intricate. We begin by noting that many of the gaps in Hofstadter’s butterfly take horizontal steps\textemdash a discontinuity in energy at a given magnetic field\textemdash when they cross gaps moving the other direction (Fig. S10 a and b). When the second butterfly appears out of the first (Fig. S10c and d), it is shifted horizontally in energy. We then effectively have two Xs next to each other. When two upper or two lower split LLs overlap, the system is simultaneously in the gap of both butterflies, and so we see the average $(s, t)$ of the two intersections. When an upper meets a lower split LL, we are seeing the intersection of LLs within a single butterfly. Therefore, it happens at the appropriate field for that intersection. As there is a background DOS from the other butterfly, we see the horizontal step in energy that is present even in undoubled lattices.
@@ -270,13 +291,13 @@ Both devices show the same generic Landau level progression as the device from t
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{figS11.pdf}
+%\includegraphics[width=\columnwidth]{figS11.pdf}
 \captionof{figure}{\textbf{Replication of split LLs in a second device.} (\textbf{A}) Longitudinal resistance vs density and perpendicular magnetic field for device D34 ($\theta = 1.59$°). The box with increased contrast (color bar does not apply) highlights the intersection of $\nu = 12$ from CNP and $\nu = -12$ from full filling. There is a faint vertical line, which has the average slope of the two Landau levels. (\textbf{B}) Schematic fan diagram corresponding to (A), with the same legend as Fig. 2 in the main text. (\textbf{C}) Line cuts from panel A at the indicated fields, showing regions of magnetoresistance with similar location and shape as those in Fig. 1b.}
 \end{figure}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{figS12.pdf}
+%\includegraphics[width=\columnwidth]{figS12.pdf}
 \captionof{figure}{\textbf{Lack of split LLs in a third device.} Longitudinal resistance vs density and perpendicular magnetic field for device D25 ($\theta = 1.52$°) for holes (\textbf{A}) and electrons (\textbf{B}). The measurements for electrons and holes are taken in different contact pairs and at different Si gate voltages. (\textbf{C-D}) Schematic fan diagram corresponding to (A) and (B) respectively, with the same legend as Fig. 2 in the main text.}
 \end{figure}
 
